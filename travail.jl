@@ -1,10 +1,10 @@
 # ---
-# title: Titre du travail
+# title: Devoir 2 - Succession végétale
 # repository: tpoisot/BIO245-modele
 # auteurs:
-#    - nom: Auteur
-#      prenom: Premier
-#      matricule: XXXXXXXX
+#    - nom: Ranaivo Rajaonarisoa
+#      prenom: Ifaliana
+#      matricule: 20325981
 #      github: premierAuteur
 #    - nom: Auteur
 #      prenom: Deuxième
