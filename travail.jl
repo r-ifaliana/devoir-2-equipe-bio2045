@@ -6,9 +6,9 @@
 #      prenom: Ifaliana
 #      matricule: 20325981
 #      github: premierAuteur
-#    - nom: Auteur
-#      prenom: Deuxième
-#      matricule: XXXXXXXX
+#    - nom: Ben Brahim
+#      prenom: Dorra
+#      matricule: 20302117
 #      github: DeuxiAut
 # ---
 
