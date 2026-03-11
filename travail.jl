@@ -14,6 +14,24 @@
 
 # # Introduction
 
+# Pour rendre la ville plus verte tout en assurant la sécurité des infrastructures,
+# il est important de savoir comment bien aménager les espaces publics.
+# La construction d'une ligne haute tension a permis le dégagement d'un terrain de 200 parcelles.
+# Un corridor conciliant biodiversité et sécurité sera aménagé, afin d'optimiser l'utilisation de cet espace libre.
+# Pour cela, un maximum de 50 buissons de deux variétés différentes pourront être plantés sur ce terrain.
+# Ensuite, les parcelles seront laissés sans intervention pour permettre le développement naturel de la biodivéersité.
+
+# Sachant que l'état de chaque parcelle change d'une génération à l'autre, les questions posées sont : 
+# combien de buissons faut-il planter pour obtenir un equilibre où 20% du terrain est végétalisé (dont 70% des buissons) après plusieurs générations ?
+# Et combien de buissons faut-il choisir de chaque variétés pour que la variété la moins commune représente au moins 30% des buissons ?
+
+# L'hypothèse est que le modèle proposé permet de simuler l'évolution de l'état des parcelles au fil des générations et ainsi d'estimer combien de 
+# buissons, au total et de chauque variété, il faudrait planter au début pour abboutir à l'équilibre souhaité dans 80% des simulations.
+
+# Résultat attendus : une certaines proportion des parcelles vides deviendront des parcelles couvertes herbes, avec ensuite une probabilité 
+# plus grande qu'elles évoluent vers des buissons d'une des deuc variétés. Une proportion des parcelles végétalisées redeviendra vide.
+# L'objectif est d'obtenir une bonne estimation du nombre de buissons à planter pour aménager efficacement le terrain.
+
 # # Présentation du modèle
 
 # # Implémentation
