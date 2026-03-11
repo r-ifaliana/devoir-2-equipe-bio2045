@@ -178,7 +178,7 @@ end
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
-s = [100, 0, 0, 0]
+s = [200, 0, 0, 0]
 states = length(s)
 patches = sum(s)
 
@@ -198,7 +198,7 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
-for _ in 1:100
+for _ in 1:200
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
