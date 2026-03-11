@@ -57,12 +57,12 @@ Random.seed!(2045)
 """
     check_transition_matrix!(T)
 
-Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1, et si ce n'est pas le cas elle renvoi un warning pour signaler qu'elle fera des modifications sur l'objet 'T' pour faire en sorte que la somme de chache ligne soit égale à 1
+Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1. Si ce n'est pas le cas, elle renvoie un warning pour signaler qu'elle va modifier l'objet 'T' afin que la somme de chache ligne soit égale à 1
 
-'T' doit être une matrice de probabilités
+'T' doit être une matrice de probabilités.
 """
 function check_transition_matrix!(T)
-    # axes(T,1) retourne les indices de la premiere dimention de T donc les lignes
+    # axes(T,1) retourne les indices de la premiere dimension de T donc les lignes
     for ligne in axes(T, 1) 
         if sum(T[ligne, :]) != 1
             @warn "La somme de la ligne $(ligne) n'est pas égale à 1 et a été modifiée"
@@ -75,11 +75,11 @@ end
 """
 check_function_arguments(transitions, states)
 
-Cette fonction vérifie que la matrice de transition 'transition' est carrée donc que le nombre de ses lignes est égale au nombre de ses colonne et si ce n'est pas le cas elle arrête le programme et affiche un message d'erreur 
-elle vérifie aussi que le nombre de ligne de la matrice de transition est égale au nombre d'états possible et si ce n'est pas le cas elle arrête le programme et affiche un message d'erreur 
+Cette fonction vérifie que la matrice de transition 'transitions' est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
+Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal au nombre d'états possible. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 
-'transitions' doit être une matrice de probabilités
-'states'doit être un vecteur de nombres
+'transitions' doit être une matrice de probabilités.
+'states' doit être un vecteur de nombres.
 """
 function check_function_arguments(transitions, states)
     if size(transitions, 1) != size(transitions, 2)
@@ -95,15 +95,15 @@ end
 """
 _sim_stochastic!(timeseries, transitions, generation)
 
-Cette fonction génère aléatoirement la population au temps t+1 à partir de la population présente à t
+Cette fonction génère aléatoirement la population au temps t+1 à partir de la population présente au temps t.
 
-'timeseries' doit être une matrice d'états
-'transitions' doit être une matrice de probabilités
-'generation' doit être un nombre
+'timeseries' doit être une matrice d'états.
+'transitions' doit être une matrice de probabilités.
+'generation' doit être un nombre.
 """
 function _sim_stochastic!(timeseries, transitions, generation)
-    for state in axes(timeseries, 1) # state = les num des lignes
-        #Multinomial() cree échantillon aléa suivant une loi multinomiale (généralisation de la loi binomiale)
+    for state in axes(timeseries, 1) # state = indices des lignes (états)
+        #Multinomial() cree échantillon aléatoire suivant une loi multinomiale
         #Multinomial(n, p) = génère un tirage aléatoire de n objets répartis selon les probabilités p
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
         timeseries[:, generation+1] .+= pop_change
@@ -113,11 +113,11 @@ end
 """
 _sim_determ!(timeseries, transitions, generation)
 
-Cette fonction génère de façon déterminé la nouvelle génération au temps t+1 à partir de la population existante au temps t
+Cette fonction génère de façon déterministe la nouvelle génération au temps t+1 à partir de la population existante au temps t.
 
-'timeseries' doit être une matrice d'états
-'transitions' doit être une matrice de probabilités
-'generation' doit être un nombre
+'timeseries' doit être une matrice d'états.
+'transitions' doit être une matrice de probabilités.
+'generation' doit être un nombre.
 """
 function _sim_determ!(timeseries, transitions, generation)
     pop_change = (timeseries[:, generation]' * transitions)'
@@ -127,29 +127,30 @@ end
 """
 simulation(transitions, states; generations=500, stochastic=false)
 
-Cette fonction effectue la simulation
-elle vérifie que les arguments sont correct 
-et adapte les estimations de l'evolution de la population selon le modele chois (stochastic ou determinist)
+Cette fonction effectue la simulation.
+Elle vérifie que les arguments sont corrects
+et adapte les estimations de l'evolution de la population selon le modèle choisi (stochastique ou déterministe)
 
-'transitions' doit être une matrice de probabilités
-'states'doit être un vecteur de nombres
-'generations' est par défaut égale à 500 et 'stochastic' est par défaut false
+'transitions' doit être une matrice de probabilités.
+'states'doit être un vecteur de nombres.
+'generations' est par défaut égal à 500 et 'stochastic' est par défaut false
 """
 function simulation(transitions, states; generations=500, stochastic=false)
 
     check_transition_matrix!(transitions)
     check_function_arguments(transitions, states)
     
-    #si determinist pop continue (car on calcule des proba) sinon pop entiere (car le vrai truc qui arrive)
+    #Si déterministe : poppulation continue (calcul de probabilités) 
+    #Sinon : populaiton entière (simulation stochastique)
     _data_type = stochastic ? Int64 : Float32
-    timeseries = zeros(_data_type, length(states), generations + 1) #état initiale
+    timeseries = zeros(_data_type, length(states), generations + 1) #état initial
     timeseries[:, 1] = states 
     
-    # Choix de la fonction =si simulation stochastic utiliser fct alea sinon utiliser fct determinist
+    # Choix de la fonction selon le type de simulation
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
     
-    # Base.OneTo(X) genre de boucle qui va de 1 à X
-    # boucle qui va remplir notre matrice avec les new changement
+    # Base.OneTo(X) crée une boucle qui va de 1 à X
+    # boucle qui remplit la matrice avec les nouveaux changements
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
     end
