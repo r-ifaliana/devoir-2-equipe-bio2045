@@ -18,16 +18,19 @@
 # il est important de savoir comment bien aménager les espaces publiques.
 # La construction d'une ligne haute tension a permis le dégagement d'un terrain de 200 parcelles.
 # Un corridor consiliant biodiversité et sécurité sera aménagé, afin d'optimiser l'utilisation de cet espace libre.
-# Pour cela, un maximum de 50 buissons de deux variétés différentes seront planté dans ce terrain.
+# Pour cela, un maximum de 50 buissons de deux variétés différentes seront plantés dans ce terrain, 
+# Ensuite, les parcelles seront laissés sans intervention pour permettre le développement naturel de la biodivéersité.
 
-# Les questions posés seraient de savoir combien de buissons faut-il planter pour avoir un
-# equilibre de 20% du terrain végétalisé (dont 70% sont des buissons) après plusieurs générations ?
-# Et combien de buissons de chaque variétés pour avoir à la fin un pourcentage supérieur à 30 % pour la varité la moins commune ?
+# Sachant que l'état de chaque parcelle change d'une génération à l'autre, les questions posés seraient de savoir 
+# combien de buissons faut-il planter pour avoir un equilibre de 20% du terrain végétalisé (dont 70% sont des buissons) après plusieurs générations ?
+# Et combien de buissons faut-il choisir de chaque variétés pour avoir à la fin un pourcentage supérieur à 30 % pour la varité la moins commune ?
 
-# L'hypothèse serait que le modèle proposé permettrait d'avoir des valeurs exactes de combien de buissons,
-# au total et de de chauqe variétés, il faudrait planter pour avoir une simulation qui abboutirait à l'équilibre souhaité dans 80% des cas.
+# L'hypothèse serait que le modèle proposé permettrait de simuler l'évolution des états des parcelles du terrain au fils des générations permettant d'avoir des valeurs exactes de combien de buissons,
+# au total et de de chauqe variétés, il faudrait planter au début pour abboutir à l'équilibre souhaité dans 80% des simulations.
 
-# Résultat attendus : Avoir une bonne estimation du nombre de buissons à planter pour bien aménager le terrain.
+# Résultat attendus : une certaines proportion des parcelles vides croitront en herbes, avec une probabilité plus grande ensuite qu'ils continue de croitre en buisson d'une des deux variétés.
+# Une proportion des parcelles végétalisé mourront et redeviendront vide.
+# Obtenir une bonne estimation du nombre de buissons à planter pour bien aménager le terrain.
 
 # # Présentation du modèle
 
