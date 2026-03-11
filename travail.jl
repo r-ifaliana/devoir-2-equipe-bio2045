@@ -59,7 +59,7 @@ Random.seed!(2045)
 
 Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1, et si ce n'est pas le cas elle renvoi un warning pour signaler qu'elle fera des modifications sur l'objet 'T' pour faire en sorte que la somme de chache ligne soit égale à 1
 
-'T' doit être une matrice 
+'T' doit être une matrice de probabilités
 """
 function check_transition_matrix!(T)
     # axes(T,1) retourne les indices de la premiere dimention de T donc les lignes
@@ -78,7 +78,8 @@ check_function_arguments(transitions, states)
 Cette fonction vérifie que la matrice de transition 'transition' est carrée donc que le nombre de ses lignes est égale au nombre de ses colonne et si ce n'est pas le cas elle arrête le programme et affiche un message d'erreur 
 elle vérifie aussi que le nombre de ligne de la matrice de transition est égale au nombre d'états possible et si ce n'est pas le cas elle arrête le programme et affiche un message d'erreur 
 
-'transitions' doit être une matrice de transition et 'states' doit être un vecteur avec les états possibles de la matrice de transition
+'transitions' doit être une matrice de probabilités
+'states'doit être un vecteur de nombres
 """
 function check_function_arguments(transitions, states)
     if size(transitions, 1) != size(transitions, 2)
@@ -94,15 +95,16 @@ end
 """
 _sim_stochastic!(timeseries, transitions, generation)
 
-Cette fonction
+Cette fonction génère aléatoirement la population au temps t+1 à partir de la population présente à t
 
-'timeseries' doit être une matrice
-'transitions' doit être 
-'generation' doit être le nombre de la génération dans laquelle on se trouve
+'timeseries' doit être une matrice d'états
+'transitions' doit être une matrice de probabilités
+'generation' doit être un nombre
 """
 function _sim_stochastic!(timeseries, transitions, generation)
-    for state in axes(timeseries, 1)
+    for state in axes(timeseries, 1) # state = les num des lignes
         #Multinomial() cree échantillon aléa suivant une loi multinomiale (généralisation de la loi binomiale)
+        #Multinomial(n, p) = génère un tirage aléatoire de n objets répartis selon les probabilités p
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
         timeseries[:, generation+1] .+= pop_change
     end
@@ -111,17 +113,28 @@ end
 """
 _sim_determ!(timeseries, transitions, generation)
 
-Cette fonction
+Cette fonction génère de façon déterminé la nouvelle génération au temps t+1 à partir de la population existante au temps t
 
-'timeseries' doit être une matrice
-'transitions' doit être 
-'generation' doit être le nombre de la génération dans laquelle on se trouve
+'timeseries' doit être une matrice d'états
+'transitions' doit être une matrice de probabilités
+'generation' doit être un nombre
 """
 function _sim_determ!(timeseries, transitions, generation)
     pop_change = (timeseries[:, generation]' * transitions)'
     timeseries[:, generation+1] .= pop_change
 end
 
+"""
+simulation(transitions, states; generations=500, stochastic=false)
+
+Cette fonction effectue la simulation
+elle vérifie que les arguments sont correct 
+et adapte les estimations de l'evolution de la population selon le modele chois (stochastic ou determinist)
+
+'transitions' doit être une matrice de probabilités
+'states'doit être un vecteur de nombres
+'generations' est par défaut égale à 500 et 'stochastic' est par défaut false
+"""
 function simulation(transitions, states; generations=500, stochastic=false)
 
     check_transition_matrix!(transitions)
@@ -129,11 +142,14 @@ function simulation(transitions, states; generations=500, stochastic=false)
     
     #si determinist pop continue (car on calcule des proba) sinon pop entiere (car le vrai truc qui arrive)
     _data_type = stochastic ? Int64 : Float32
-    timeseries = zeros(_data_type, length(states), generations + 1)
-    timeseries[:, 1] = states
-
+    timeseries = zeros(_data_type, length(states), generations + 1) #état initiale
+    timeseries[:, 1] = states 
+    
+    # Choix de la fonction =si simulation stochastic utiliser fct alea sinon utiliser fct determinist
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
-
+    
+    # Base.OneTo(X) genre de boucle qui va de 1 à X
+    # boucle qui va remplir notre matrice avec les new changement
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
     end
