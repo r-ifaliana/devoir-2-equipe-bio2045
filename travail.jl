@@ -194,6 +194,40 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
+"""
+check_conditions(timeseries)
+
+Cette fonction renvoie true lorsque les conditions sont respectées.
+"""
+function check_conditions(timeseries)
+    # On récupère la dernière colonne (état final)
+    etat_final = timeseries[:, end]
+
+    Barren = etat_final[1]
+    Grass = etat_final[2]
+    Shrubs1 = etat_final[3]
+    Shrubs2 = etat_final[4]
+
+    total_parcelles = sum(etat_final)
+    Vegetation = Grass + Shrubs1 + Shrubs2
+    shrubs_total = shrubs1 + shrubs 2
+
+    # Condition 1 = au moins 20% de parcelles végétalisées
+    cond1 = Vegetation / total_parcelles = 0.2
+    # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
+    if cond2 = Grass/shrubs_total == 0.30
+        else
+         cond2 = false
+    end
+
+    # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
+    if cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
+        else
+        cond3 = false
+    end
+    return cond1, cond2, cond3
+end
+
 # States
 # Barren, Grass, Shrubs
 s = [100, 0, 0]
