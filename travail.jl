@@ -183,6 +183,7 @@ states = length(s)
 patches = sum(s)
 
 # Transitions
+T = zeros(Float64, states, states)
 T[1, :] = [110, 8, 0, 0]
 T[2, :] = [2, 120, 4, 3] # faut changer ici pour les proba des buisson
 T[3, :] = [1, 0, 94, 0]
