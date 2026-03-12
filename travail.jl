@@ -194,6 +194,33 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
+
+"""
+check_80(transitions, states, timeseries)
+
+cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
+
+'transitions' doit être une matrice de probabilités.
+'states' doit être un vecteur de nombres.
+'timeseries' doit être une matrice d'états.
+"""
+function check_80(transitions, states, timeseries)
+    condition_respecté =0
+    for i in Base.OneTo(100)
+        simulation(transitions, states)
+        if check_conditions(timeseries) 
+            condition_respecté = condition_respecté +1
+        end
+    end
+    if condition_respecté >= 80
+        println("conditions d'équilibre respécté dans au moins 80% des simulations")
+        return true 
+    else
+        println("Simulation non concluante !")
+        return false 
+    end
+end
+
 """
 check_conditions(timeseries)
 
@@ -277,3 +304,17 @@ end
 axislegend(ax)
 tightlimits!(ax)
 current_figure()
+
+##############
+#function test(x,y) #pour voir comment ecrir (a enlever)
+    if x < y 
+        println("x <y") 
+    else
+        println("jsp")   
+    end
+
+    if x+y > 3
+        println("sup a 3") 
+    end
+    
+#end
