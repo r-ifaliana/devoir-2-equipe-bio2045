@@ -259,7 +259,7 @@ tightlimits!(ax)
 current_figure()
 
 ##############
-#function test(x,y)
+#function test(x,y) #pour voir comment ecrir (a enlever)
     if x < y 
         println("x <y") 
     else
