@@ -198,6 +198,7 @@ end
 check_conditions(timeseries)
 
 Cette fonction renvoie true lorsque les conditions sont respectées.
+'timeseries' doit être une matrice d'états.
 """
 function check_conditions(timeseries)
     # On récupère la dernière colonne (état final)
@@ -210,18 +211,20 @@ function check_conditions(timeseries)
 
     total_parcelles = sum(etat_final)
     Vegetation = Grass + Shrubs1 + Shrubs2
-    shrubs_total = shrubs1 + shrubs2
+    shrubs_total = Shrubs1 + Shrubs2
 
     # Condition 1 = au moins 20% de parcelles végétalisées
-    cond1 = Vegetation / total_parcelles = 0.2
+    cond1 = Vegetation / total_parcelles >= 0.2
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
-    if (cond2 = Grass/shrubs_total )== 0.30
+    if Vegetation > 0
+         (cond2 = Grass/Vegetation )== 0.30
     else
        cond2 = false
     end
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
-    if (cond3 = (min(Shrubs1, Shrubs2)/shrubs_total)) >= 0.30
+    if shrubs_total > 0
+        (cond3 = (min(Shrubs1, Shrubs2)/shrubs_total)) >= 0.30
     else
        cond3 = false
     end
