@@ -196,18 +196,19 @@ end
 
 
 """
-check_80(transitions, states)
+check_80(transitions, states, timeseries)
 
 cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
 
 'transitions' doit être une matrice de probabilités.
 'states' doit être un vecteur de nombres.
+'timeseries' doit être une matrice d'états.
 """
-function check_80(transitions, states)
+function check_80(transitions, states, timeseries)
     condition_respecté =0
     for i in Base.OneTo(100)
         simulation(transitions, states)
-        if check_conditions() # ajoute tes arguments ici et dans la description en haut 
+        if check_conditions(timeseries) 
             condition_respecté = condition_respecté +1
         end
     end
