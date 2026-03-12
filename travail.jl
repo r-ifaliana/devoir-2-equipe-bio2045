@@ -34,6 +34,17 @@
 
 # # Présentation du modèle
 
+# Le modèle utilisé est un modèle de transition entre états, dans lequel chaque parcelle du terrain peut se trouver dans un état écologique précis.
+# À chaque génération, l'état d'une parcelle peut changer selon les probabilités définies dans une matrice de transition.
+
+# Dans notre cas, quatre états sont considérés : sol nu (Barren), herbes (Grass), buissons de variété 1 (Shrubs1), buissons de variété 2 (Shrubs2).
+# L'évolution des parcelles est décrite par une matrice de transition où chaque ligne représente l'état d'une parcelle au temps t et chaque colonne
+# la probabilité de transition vers un nouvel état à la génération suivante. La somme des probabilités de chaque ligne doit être égale à 1.
+
+# Ce modèle correspond à une chaîne de Markov où l'état au temps t+1 dépend uniquement de l'état actuel et de la probabailité de transition qui va avec.
+# Il permet de simuler l'évolution des parcelles dans chaque état au cours des générations afin d'avoir une bonne estimation du nombre de buissons à planter
+# tout en respectant les contraintes imposées (50 buissons à planter sur 200 parcelles) afin d'optimiser l'aménagement du terrain.
+
 # # Implémentation
 
 # ## Packages nécessaires
