@@ -195,20 +195,21 @@ function simulation(transitions, states; generations=500, stochastic=false)
 end
 
 # States
-# Barren, Grass, Shrubs
-s = [100, 0, 0]
+# Barren, Grass, Shrubs1, Shrubs2
+s = [200, 0, 0, 0]
 states = length(s)
 patches = sum(s)
 
 # Transitions
 T = zeros(Float64, states, states)
-T[1, :] = [110, 8, 0]
-T[2, :] = [2, 120, 3]
-T[3, :] = [1, 0, 94]
+T[1, :] = [110, 8, 0, 0]
+T[2, :] = [2, 120, 4, 3] # faut changer ici pour les proba des buisson
+T[3, :] = [1, 0, 94, 0]
+T[4, :] = [1, 0, 0, 94]
 T
 
-states_names = ["Barren", "Grasses", "Shrubs"]
-states_colors = [:grey40, :orange, :teal]
+states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
+states_colors = [:grey40, :orange, :teal, :green] # on peut peut etre trouver d'autre couleur si tu veux
 
 # Simulations
 
@@ -216,7 +217,7 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
-for _ in 1:100
+for _ in 1:200
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
