@@ -210,39 +210,40 @@ function check_conditions(timeseries)
 
     total_parcelles = sum(etat_final)
     Vegetation = Grass + Shrubs1 + Shrubs2
-    shrubs_total = shrubs1 + shrubs 2
+    shrubs_total = shrubs1 + shrubs2
 
     # Condition 1 = au moins 20% de parcelles végétalisées
     cond1 = Vegetation / total_parcelles = 0.2
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
-    if cond2 = Grass/shrubs_total == 0.30
-        else
-         cond2 = false
+    if (cond2 = Grass/shrubs_total )== 0.30
+    else
+       cond2 = false
     end
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
-    if cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
-        else
-        cond3 = false
+    if (cond3 = (min(Shrubs1, Shrubs2)/shrubs_total)) >= 0.30
+    else
+       cond3 = false
     end
     return cond1, cond2, cond3
 end
 
 # States
-# Barren, Grass, Shrubs
-s = [100, 0, 0]
+# Barren, Grass, Shrubs1, Shrubs2
+s = [200, 0, 0, 0]
 states = length(s)
 patches = sum(s)
 
 # Transitions
 T = zeros(Float64, states, states)
-T[1, :] = [110, 8, 0]
-T[2, :] = [2, 120, 3]
-T[3, :] = [1, 0, 94]
+T[1, :] = [110, 8, 0, 0]
+T[2, :] = [2, 120, 4, 3] # faut changer ici pour les proba des buisson
+T[3, :] = [1, 0, 94, 0]
+T[4, :] = [1, 0, 0, 94]
 T
 
-states_names = ["Barren", "Grasses", "Shrubs"]
-states_colors = [:grey40, :orange, :teal]
+states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
+states_colors = [:grey40, :orange, :teal, :green] # on peut peut etre trouver d'autre couleur si tu veux
 
 # Simulations
 
@@ -250,7 +251,7 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
-for _ in 1:100
+for _ in 1:200
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
