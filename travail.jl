@@ -197,7 +197,12 @@ end
 """
 check_conditions(timeseries)
 
-Cette fonction renvoie true lorsque les conditions sont respectées.
+Vérifie 3 conditions à la dernière génération : 
+1) >= 20% des parcelles sont végétalisées.
+2) 30% des parcelles végétalisées sont des herbes.
+3) La variété de buisson la moins abondante représente >= 30% des buissons.
+
+Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
 function check_conditions(timeseries)
@@ -217,17 +222,19 @@ function check_conditions(timeseries)
     cond1 = Vegetation / total_parcelles >= 0.2
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
     if Vegetation > 0
-         (cond2 = Grass/Vegetation )== 0.30
+         cond2 = (Grass/Vegetation )== 0.30
     else
        cond2 = false
     end
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
     if shrubs_total > 0
-        (cond3 = (min(Shrubs1, Shrubs2)/shrubs_total)) >= 0.30
+        cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
     else
        cond3 = false
     end
+
+    println(cond1, cond2, cond3)
     return cond1, cond2, cond3
 end
 
