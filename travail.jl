@@ -257,3 +257,17 @@ end
 axislegend(ax)
 tightlimits!(ax)
 current_figure()
+
+##############
+#function test(x,y)
+    if x < y 
+        println("x <y") 
+    else
+        println("jsp")   
+    end
+
+    if x+y > 3
+        println("sup a 3") 
+    end
+    
+#end
