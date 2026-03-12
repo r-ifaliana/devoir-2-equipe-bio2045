@@ -38,10 +38,11 @@
 
 # Le modèle est implémenté dans Julia à partir du code fourni pour simuler les transitions végétales.
 # Il utilise une matrice qui correspond à l'évolution de chaque état au cours du temps. 
-# Une simulation déterministe est utilisée, qui calcule l'évolution attendue des parcelles, la ssimulation stochastique quant à elle,
+# Une simulation déterministe est utilisée, qui calcule l'évolution attendue des parcelles, la simulation stochastique quant à elle,
 # introduit des aléas dans les transitions de chaque état. 
 # Des fonctions de vérification permettent également de s'assurer que la matrice de transition et les arguments fournis sont cohérents 
 # avant de faire marcher la simulation.
+
 # ## Packages nécessaires
 
 import Random
