@@ -194,6 +194,30 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
+
+"""
+check_80(transitions, states)
+
+cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
+
+'transitions' doit être une matrice de probabilités.
+'states' doit être un vecteur de nombres.
+"""
+function check_80(transitions, states)
+    condition_respecté =0
+    for i in Base.OneTo(100)
+        simulation(transitions, states)
+        if check_conditions()
+            condition_respecté = condition_respecté +1
+        end
+    end
+    if condition_respecté >= 80
+        return "conditions d'équilibre respécté dans au moins 80% des simulations"
+    else
+        return "Simulation non concluante !"
+    end
+end
+
 # States
 # Barren, Grass, Shrubs1, Shrubs2
 s = [200, 0, 0, 0]
