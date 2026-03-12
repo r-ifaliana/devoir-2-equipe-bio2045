@@ -207,7 +207,7 @@ function check_80(transitions, states)
     condition_respecté =0
     for i in Base.OneTo(100)
         simulation(transitions, states)
-        if check_conditions()
+        if check_conditions() # ajoute tes arguments ici et dans la description en haut 
             condition_respecté = condition_respecté +1
         end
     end
