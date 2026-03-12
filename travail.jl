@@ -213,9 +213,11 @@ function check_80(transitions, states, timeseries)
         end
     end
     if condition_respecté >= 80
-        return "conditions d'équilibre respécté dans au moins 80% des simulations"
+        println("conditions d'équilibre respécté dans au moins 80% des simulations")
+        return true 
     else
-        return "Simulation non concluante !"
+        println("Simulation non concluante !")
+        return false 
     end
 end
 
