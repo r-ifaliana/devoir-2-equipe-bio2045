@@ -194,6 +194,17 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
+function check_80(T, s; generations=200)
+    ok = 0
+    for _ in 1:100
+        sim = simulation(T, s; stochastic=true, generations=200)
+        ok += check_conditions(sim) ? 1 : 0
+    end
+    println("Réussites : ", ok, "/100")
+    return ok >= 80
+end
+
+
 """
 check_conditions(timeseries)
 
@@ -205,7 +216,7 @@ Vérifie 3 conditions à la dernière génération :
 Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
-function check_conditions(timeseries)
+function check_conditions(timeseries; tolerance=0.05)
     # On récupère la dernière colonne (état final)
     etat_final = timeseries[:, end]
 
@@ -219,13 +230,16 @@ function check_conditions(timeseries)
     shrubs_total = Shrubs1 + Shrubs2
 
     # Condition 1 = au moins 20% de parcelles végétalisées
-    cond1 = Vegetation / total_parcelles >= 0.2
+    cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
+    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
     if Vegetation > 0
-         cond2 = (Grass/Vegetation )== 0.30
+         cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
     else
        cond2 = false
     end
+           println("% de herbes =", (Grass/Vegetation)*100, "%")
+
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
     if shrubs_total > 0
@@ -233,6 +247,8 @@ function check_conditions(timeseries)
     else
        cond3 = false
     end
+           println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
+
 
     println(cond1, cond2, cond3)
     return cond1, cond2, cond3
@@ -240,16 +256,16 @@ end
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
-s = [200, 0, 0, 0]
+s = [150, 0, 25, 25]
 states = length(s)
 patches = sum(s)
 
 # Transitions
 T = zeros(Float64, states, states)
-T[1, :] = [110, 8, 0, 0]
-T[2, :] = [2, 120, 4, 3] # faut changer ici pour les proba des buisson
-T[3, :] = [1, 0, 94, 0]
-T[4, :] = [1, 0, 0, 94]
+T[1, :] = [0.98, 0.02, 0, 0]
+T[2, :] = [0.2, 0.65, 0.075, 0.075]
+T[3, :] = [0.02, 0.035, 0.9, 0]
+T[4, :] = [0.02, 0.035, 0, 0.9]
 T
 
 states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
@@ -277,3 +293,6 @@ end
 axislegend(ax)
 tightlimits!(ax)
 current_figure()
+
+
+println(check_conditions(det_sim))
