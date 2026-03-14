@@ -205,7 +205,7 @@ Vérifie 3 conditions à la dernière génération :
 Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
-function check_conditions(timeseries)
+function check_conditions(timeseries; tolerance=0.05)
     # On récupère la dernière colonne (état final)
     etat_final = timeseries[:, end]
 
@@ -219,24 +219,29 @@ function check_conditions(timeseries)
     shrubs_total = Shrubs1 + Shrubs2
 
     # Condition 1 = au moins 20% de parcelles végétalisées
-    cond1 = Vegetation / total_parcelles >= 0.2
+    cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
+    #println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
     if Vegetation > 0
-         cond2 = (Grass/Vegetation )== 0.30
+        cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
     else
        cond2 = false
     end
+        #println("% de herbes =", (Grass/Vegetation)*100, "%")
+
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
     if shrubs_total > 0
         cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
     else
-       cond3 = false
+        cond3 = false
     end
+        #println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
     println(cond1, cond2, cond3)
     return cond1, cond2, cond3
 end
+
 
 """
 check_80(transitions, states, timeseries)
@@ -247,35 +252,27 @@ cette fonction vérifie qu'au moins 80% des simulations vérifient les condition
 'states' doit être un vecteur de nombres.
 'timeseries' doit être une matrice d'états.
 """
-function check_80(transitions, states, timeseries)
-    condition_respecté =0
-    for i in Base.OneTo(100)
-        simulation(transitions, states)
-        if check_conditions(timeseries) 
-            condition_respecté = condition_respecté +1
-        end
-    end
+function check_80(condition_respecté, repet_simulation)
+    condition_respecté = (condition_respecté/repet_simulation)*100
     if condition_respecté >= 80
-        println("conditions d'équilibre respécté dans au moins 80% des simulations")
-        return true 
+        return true, println("conditions d'équilibre respécté dans", condition_respecté ,"% des simulations")
     else
-        println("Simulation non concluante !")
-        return false 
+        return false, println("Simulation non concluante! marche dans ", condition_respecté, "% des cas")
     end
 end
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
-s = [200, 0, 0, 0]
+s = [150, 0, 25, 25]
 states = length(s)
 patches = sum(s)
 
 # Transitions
 T = zeros(Float64, states, states)
-T[1, :] = [110, 8, 0, 0]
-T[2, :] = [2, 120, 4, 3] # faut changer ici pour les proba des buisson
-T[3, :] = [1, 0, 94, 0]
-T[4, :] = [1, 0, 0, 94]
+T[1, :] = [0.98, 0.02, 0, 0]
+T[2, :] = [0.2, 0.65, 0.075, 0.075]
+T[3, :] = [0.02, 0.035, 0.9, 0]
+T[4, :] = [0.02, 0.035, 0, 0.9]
 T
 
 states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
@@ -287,12 +284,19 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
-for _ in 1:200
+condition_respecté =0
+repet_simulation = 200
+for _ in 1:repet_simulation
     sto_sim = simulation(T, s; stochastic=true, generations=200)
+    cond1, cond2, cond3 = check_conditions(sto_sim)
+    if cond1 & cond2 & cond3
+        condition_respecté = condition_respecté +1
+    end
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
     end
 end
+println(check_80(condition_respecté, repet_simulation))
 
 # Deterministic simulation
 det_sim = simulation(T, s; stochastic=false, generations=200)
@@ -304,15 +308,5 @@ axislegend(ax)
 tightlimits!(ax)
 current_figure()
 
-##############
-#function test(x,y) #pour voir comment ecrir (a enlever)
-#    if x < y 
-#       println("x <y") 
-#    else
-#        println("jsp")   
-#    end
-#
-#    if x+y > 3
-#        println("sup a 3") 
-#    end   
-#end
+
+println(check_conditions(det_sim))
