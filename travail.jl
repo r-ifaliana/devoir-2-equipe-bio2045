@@ -72,11 +72,22 @@ function foo(x, y)
     return nothing
 end
 
-# # Présentation des résultats
+# ## Présentation des résultats
+
+# Deux simulations ont étaient réalisé, une première deterministe et une seconde stochastique.
+# La simulation deterministe à permis de trouver les valeurs de la matrice de transition,
+# qui ont permis l'obtention d'une distribution finale respectant les trois condition suivantes :
+# 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
+# 2) L'herbes représente 30% de la végétations, avec un interval de tolérence de 10%.
+# 3) La variété de buisson la moins commune sur le terrain représente au moins 30% des buissons.
+# À la fin de cette simulation le terrain obtenu se compose de ()% de végétation dont ()% sont de l'herbes. Et la variété de buisson la moins présente représente ()% des buissons.
+# La simulation stochastique est réalisé par création aléatoire de la population de la génération suivante.
+# La répétition (200 fois) de l'exution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de ()%.
+# Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
 
 # La figure suivante représente des valeurs aléatoires:
-
-hist(randn(100))
+# Cammambert de valeur deterministe a la fin = pie(valeurs= vecteur, color=vecteur)
+# pie()
 
 # # Discussion
 
@@ -89,6 +100,9 @@ using Distributions
 
 import Random
 Random.seed!(2045)
+
+etat_F= det_sim[:,end]
+pie(etat_F,color= states_colors)
 
 """
     check_transition_matrix!(T)
@@ -220,14 +234,14 @@ function check_conditions(timeseries; tolerance=0.05)
 
     # Condition 1 = au moins 20% de parcelles végétalisées
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
-    #println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
+    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
     if Vegetation > 0
         cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
     else
        cond2 = false
     end
-        #println("% de herbes =", (Grass/Vegetation)*100, "%")
+        println("% de herbes =", (Grass/Vegetation)*100, "%")
 
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
@@ -236,7 +250,7 @@ function check_conditions(timeseries; tolerance=0.05)
     else
         cond3 = false
     end
-        #println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
+        println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
     println(cond1, cond2, cond3)
     return cond1, cond2, cond3
@@ -270,7 +284,7 @@ patches = sum(s)
 # Transitions
 T = zeros(Float64, states, states)
 T[1, :] = [0.98, 0.02, 0, 0]
-T[2, :] = [0.2, 0.65, 0.075, 0.075]
+T[2, :] = [0.2, 0.66, 0.065, 0.075]
 T[3, :] = [0.02, 0.035, 0.9, 0]
 T[4, :] = [0.02, 0.035, 0, 0.9]
 T
