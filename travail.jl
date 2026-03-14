@@ -12,7 +12,7 @@
 #      github: DeuxiAut
 # ---
 
-# # Introduction
+# ## Introduction
 
 # Pour rendre la ville plus verte tout en assurant la sécurité des infrastructures,
 # il est important de savoir comment bien aménager les espaces publics.
@@ -32,7 +32,7 @@
 # plus grande qu'elles évoluent vers des buissons d'une des deuc variétés. Une proportion des parcelles végétalisées redeviendra vide.
 # L'objectif est d'obtenir une bonne estimation du nombre de buissons à planter pour aménager efficacement le terrain.
 
-# # Présentation du modèle
+# ## Présentation du modèle
 
 # Le modèle utilisé est un modèle de transition entre états, dans lequel chaque parcelle du terrain peut se trouver dans un état écologique précis.
 # À chaque génération, l'état d'une parcelle peut changer selon les probabilités définies dans une matrice de transition.
@@ -45,7 +45,7 @@
 # Il permet de simuler l'évolution des parcelles dans chaque état au cours des générations afin d'avoir une bonne estimation du nombre de buissons à planter
 # tout en respectant les contraintes imposées (50 buissons à planter sur 200 parcelles) afin d'optimiser l'aménagement du terrain.
 
-# # Implémentation
+# ## Implémentation
 
 # Le modèle est implémenté dans Julia à partir du code fourni pour simuler les transitions végétales.
 # Il utilise une matrice qui correspond à l'évolution de chaque état au cours du temps. 
@@ -252,6 +252,7 @@ function check_80(condition_respecté, repet_simulation)
     end
 end
 
+# ##
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
@@ -318,12 +319,12 @@ println(check_conditions(det_sim)) # a enlever
 # La répétition (200 fois) de l'exution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de ()%.
 # Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
 
-# La figure suivante représente des valeurs aléatoires:
-# Cammambert de valeur deterministe a la fin = pie(valeurs= vecteur, color=vecteur)
+# Figure : cammambert des valeurs obtenu à la fin de la simulation deterministe 
+# pie(valeurs= vecteur, color=vecteur)
 etat_F= det_sim[:,end]
 pie(etat_F,color= states_colors)
 
-# # Discussion
+# ## Discussion
 
 ## qui suit a enlever
 # On peut aussi citer des références dans le document `references.bib`,
