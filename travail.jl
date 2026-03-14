@@ -194,24 +194,6 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
-function check_80(transitions, states, timeseries)
-    condition_respecté =0
-    for i in Base.OneTo(100)
-        simulation(transitions, states)
-        if check_conditions(timeseries) 
-            condition_respecté = condition_respecté +1
-        end
-    end
-    if condition_respecté >= 80
-        println("conditions d'équilibre respécté dans au moins 80% des simulations")
-        return true 
-    else
-        println("Simulation non concluante !")
-        return false 
-    end
-end
-
-
 """
 check_conditions(timeseries)
 
@@ -238,27 +220,45 @@ function check_conditions(timeseries; tolerance=0.05)
 
     # Condition 1 = au moins 20% de parcelles végétalisées
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
-    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
+    #println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
     if Vegetation > 0
-         cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
+        cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
     else
        cond2 = false
     end
-           println("% de herbes =", (Grass/Vegetation)*100, "%")
+        #println("% de herbes =", (Grass/Vegetation)*100, "%")
 
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
     if shrubs_total > 0
         cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
     else
-       cond3 = false
+        cond3 = false
     end
-           println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
-
+        #println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
     println(cond1, cond2, cond3)
     return cond1, cond2, cond3
+end
+
+
+"""
+check_80(transitions, states, timeseries)
+
+cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
+
+'transitions' doit être une matrice de probabilités.
+'states' doit être un vecteur de nombres.
+'timeseries' doit être une matrice d'états.
+"""
+function check_80(condition_respecté)
+    condition_respecté = condition_respecté/2
+    if condition_respecté >= 80
+        return true, println("conditions d'équilibre respécté dans", condition_respecté ,"% des simulations")
+    else
+        return false, println("Simulation non concluante! marche dans ", condition_respecté, "% des cas")
+    end
 end
 
 # States
@@ -284,12 +284,18 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
+condition_respecté =0
 for _ in 1:200
     sto_sim = simulation(T, s; stochastic=true, generations=200)
+    cond1, cond2, cond3 = check_conditions(sto_sim)
+    if cond1 & cond2 & cond3
+        condition_respecté = condition_respecté +1
+    end
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
     end
 end
+println(check_80(condition_respecté))
 
 # Deterministic simulation
 det_sim = simulation(T, s; stochastic=false, generations=200)
