@@ -87,7 +87,7 @@ end
 
 # La figure suivante représente des valeurs aléatoires:
 # Cammambert de valeur deterministe a la fin = pie(valeurs= vecteur, color=vecteur)
-pie()
+# pie()
 
 # # Discussion
 
@@ -100,6 +100,9 @@ using Distributions
 
 import Random
 Random.seed!(2045)
+
+etat_F= det_sim[:,end]
+pie(etat_F,color= states_colors)
 
 """
     check_transition_matrix!(T)
