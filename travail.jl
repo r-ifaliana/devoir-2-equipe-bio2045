@@ -194,14 +194,21 @@ function simulation(transitions, states; generations=500, stochastic=false)
     return timeseries
 end
 
-function check_80(T, s; generations=200)
-    ok = 0
-    for _ in 1:100
-        sim = simulation(T, s; stochastic=true, generations=200)
-        ok += check_conditions(sim) ? 1 : 0
+function check_80(transitions, states, timeseries)
+    condition_respecté =0
+    for i in Base.OneTo(100)
+        simulation(transitions, states)
+        if check_conditions(timeseries) 
+            condition_respecté = condition_respecté +1
+        end
     end
-    println("Réussites : ", ok, "/100")
-    return ok >= 80
+    if condition_respecté >= 80
+        println("conditions d'équilibre respécté dans au moins 80% des simulations")
+        return true 
+    else
+        println("Simulation non concluante !")
+        return false 
+    end
 end
 
 
