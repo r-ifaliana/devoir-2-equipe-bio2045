@@ -59,9 +59,15 @@
 import Random
 Random.seed!(123456)
 using CairoMakie
+using Distributions
 
-# ## Une autre section
+# ## point de départ standard
 
+Random.seed!(2045)
+
+
+# ## Une autre section # a enlever
+##################################
 """
     foo(x, y)
 
@@ -71,38 +77,9 @@ function foo(x, y)
     ## Cette ligne est un commentaire
     return nothing
 end
+###########################
 
-# ## Présentation des résultats
-
-# Deux simulations ont étaient réalisé, une première deterministe et une seconde stochastique.
-# La simulation deterministe à permis de trouver les valeurs de la matrice de transition,
-# qui ont permis l'obtention d'une distribution finale respectant les trois condition suivantes :
-# 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
-# 2) L'herbes représente 30% de la végétations, avec un interval de tolérence de 10%.
-# 3) La variété de buisson la moins commune sur le terrain représente au moins 30% des buissons.
-# À la fin de cette simulation le terrain obtenu se compose de ()% de végétation dont ()% sont de l'herbes. Et la variété de buisson la moins présente représente ()% des buissons.
-# La simulation stochastique est réalisé par création aléatoire de la population de la génération suivante.
-# La répétition (200 fois) de l'exution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de ()%.
-# Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
-
-# La figure suivante représente des valeurs aléatoires:
-# Cammambert de valeur deterministe a la fin = pie(valeurs= vecteur, color=vecteur)
-# pie()
-
-# # Discussion
-
-# On peut aussi citer des références dans le document `references.bib`,
-# @ermentrout1993cellular -- la bibliographie sera ajoutée automatiquement à la
-# fin du document.
-
-using CairoMakie
-using Distributions
-
-import Random
-Random.seed!(2045)
-
-etat_F= det_sim[:,end]
-pie(etat_F,color= states_colors)
+# ## Fonctions utilisé
 
 """
     check_transition_matrix!(T)
@@ -121,6 +98,7 @@ function check_transition_matrix!(T)
     end
     return T
 end
+
 
 """
 check_function_arguments(transitions, states)
@@ -220,6 +198,7 @@ Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
 function check_conditions(timeseries; tolerance=0.05)
+    
     # On récupère la dernière colonne (état final)
     etat_final = timeseries[:, end]
 
@@ -243,7 +222,6 @@ function check_conditions(timeseries; tolerance=0.05)
     end
         println("% de herbes =", (Grass/Vegetation)*100, "%")
 
-
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
     if shrubs_total > 0
         cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
@@ -252,10 +230,9 @@ function check_conditions(timeseries; tolerance=0.05)
     end
         println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
-    println(cond1, cond2, cond3)
+    println(cond1, cond2, cond3) # a enlever
     return cond1, cond2, cond3
 end
-
 
 """
 check_80(transitions, states, timeseries)
@@ -274,6 +251,7 @@ function check_80(condition_respecté, repet_simulation)
         return false, println("Simulation non concluante! marche dans ", condition_respecté, "% des cas")
     end
 end
+
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
@@ -297,6 +275,13 @@ states_colors = [:grey40, :orange, :teal, :green] # on peut peut etre trouver d'
 f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
+
+# Deterministic simulation
+det_sim = simulation(T, s; stochastic=false, generations=200)
+for i in eachindex(s)
+    lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=4)
+end
+
 # Stochastic simulation
 condition_respecté =0
 repet_simulation = 200
@@ -312,15 +297,36 @@ for _ in 1:repet_simulation
 end
 println(check_80(condition_respecté, repet_simulation))
 
-# Deterministic simulation
-det_sim = simulation(T, s; stochastic=false, generations=200)
-for i in eachindex(s)
-    lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=4)
-end
 
 axislegend(ax)
 tightlimits!(ax)
 current_figure()
 
+println(check_conditions(det_sim)) # a enlever
 
-println(check_conditions(det_sim))
+
+# ## Présentation des résultats
+
+# Deux simulations ont étaient réalisé, une première deterministe et une seconde stochastique.
+# La simulation deterministe à permis de trouver les valeurs de la matrice de transition,
+# qui ont permis l'obtention d'une distribution finale respectant les trois condition suivantes :
+# 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
+# 2) L'herbes représente 30% de la végétations, avec un interval de tolérence de 10%.
+# 3) La variété de buisson la moins commune sur le terrain représente au moins 30% des buissons.
+# À la fin de cette simulation le terrain obtenu se compose de ()% de végétation dont ()% sont de l'herbes. Et la variété de buisson la moins présente représente ()% des buissons.
+# La simulation stochastique est réalisé par création aléatoire de la population de la génération suivante.
+# La répétition (200 fois) de l'exution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de ()%.
+# Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
+
+# La figure suivante représente des valeurs aléatoires:
+# Cammambert de valeur deterministe a la fin = pie(valeurs= vecteur, color=vecteur)
+etat_F= det_sim[:,end]
+pie(etat_F,color= states_colors)
+
+# # Discussion
+
+## qui suit a enlever
+# On peut aussi citer des références dans le document `references.bib`,
+# @ermentrout1993cellular -- la bibliographie sera ajoutée automatiquement à la
+# fin du document.
+
