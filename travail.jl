@@ -252,8 +252,8 @@ cette fonction vérifie qu'au moins 80% des simulations vérifient les condition
 'states' doit être un vecteur de nombres.
 'timeseries' doit être une matrice d'états.
 """
-function check_80(condition_respecté)
-    condition_respecté = condition_respecté/2
+function check_80(condition_respecté, repet_simulation)
+    condition_respecté = (condition_respecté/repet_simulation)*100
     if condition_respecté >= 80
         return true, println("conditions d'équilibre respécté dans", condition_respecté ,"% des simulations")
     else
@@ -285,7 +285,8 @@ ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Stochastic simulation
 condition_respecté =0
-for _ in 1:200
+repet_simulation = 200
+for _ in 1:repet_simulation
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     cond1, cond2, cond3 = check_conditions(sto_sim)
     if cond1 & cond2 & cond3
@@ -295,7 +296,7 @@ for _ in 1:200
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
     end
 end
-println(check_80(condition_respecté))
+println(check_80(condition_respecté, repet_simulation))
 
 # Deterministic simulation
 det_sim = simulation(T, s; stochastic=false, generations=200)
