@@ -1,7 +1,7 @@
 # Dépôt modèle pour le cours BIO 2045
 # Devoir 2 - Succession végétale
 
-## Table de matière 
+## Table de matière du programme
 
 ### I. Introduction
 - Présentation générale de la situation
@@ -27,8 +27,8 @@
 
 ## But du programme 
 
-Simuler l'evolution de la vegetalisation d'un terrain fraichement dégagé pour l'installation d'une ligne à haute tension. 
-à la fin de la simulation le modèle permettrait l'btension d'une distribution végétale respectant un équilibre entre biodiversité et sécurité des infrastructures.
+Simuler l'évolution de la végétalisation d'un terrain fraichement dégagé pour l'installation d'une ligne à haute tension. 
+À, la fin de la simulation le modèle permettrait l'obtension d'une distribution végétale respectant un équilibre entre biodiversité et sécurité des infrastructures.
 
 ## États possibles pour une parcelle 
 1) Vide
@@ -47,6 +47,11 @@ La matrice de transition utilisé dans ce modèle possède les propriétés des 
 - Buisson 1 ---> Vide OU Herbe OU Buisson 1 
 - Buisson 2 --> Vide OU Herbe OU Buisson 2
 
+## Règles de l'équilibre biodiversité / sécurité des infrastructures
+
+1) Parcelles non vide représentent 20% du terrain.
+2) Parcelles dans l'états Herbe représentent 30% de la végétation totale.
+3) Parcelles avec la variété de buisson la moins présentes représentent au moins 30% des buissons totaux.
 
 
 
