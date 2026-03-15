@@ -91,6 +91,18 @@ end
 
 # # Discussion
 
+# Les simulations réalisées permettent de simuler comment un corridor végétalisé peut évoluer à partir d'un nombre limité de buissons plantés.
+# Le modèle utilisé reprend le principe d'une succession végétale où les parcelles de sol nu peuvent être colonisés par des herbes, qui peuvent ensuite évoluer vers des états dominés par des buissons.
+# Cette succession écologique est retrouvée dans de nombreux écosystèmes où les espèces pionnières colonisent d'abord les milieux perturbés avant d'être progressivement remplacés par des espèces plus compétitives @références.
+
+# La simulation déterministe montre que la matrice de transition choisie permet d'atteindre un état d'équilibre respectant les conditions imposées. Cependant, lorsque le modèle stochastique est pris en compte, ce caractère aléatoire malgré la répétition de 200fois 
+# ne permet d'atteindre une réussite dans 47.5% des simulations. Ce résultat est nettement inférieur à l'objectif initial, qui était d'obtenir au moins 80% de réussite. 
+# Cet écart prouve que la simulation proposée permet théoriquement d'atteindre l'état final souhaité, mais que la variabilité aléatoire du système réduit fortement la probabilité 
+# que cet équilibre soit atteint dans la pratique.
+
+# Plusieurs éléments du modèle peuvent expliquer cette différence. Par exemple, les probabilités de transition favorisent fortement la persistance des buissons,
+# avec une probabilité de 0.9 de rester dans le même état. Une fois établis, les buissons on tendance à rester dans le système. 
+
 # On peut aussi citer des références dans le document `references.bib`,
 # @ermentrout1993cellular -- la bibliographie sera ajoutée automatiquement à la
 # fin du document.
