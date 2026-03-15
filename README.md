@@ -28,7 +28,7 @@
 ## But du programme 
 
 Simuler l'evolution de la vegetalisation d'un terrain fraichement dégagé pour l'installation d'une ligne à haute tension. 
-à la fin de la simulation le modèle permet l'obtention d'un terrain végétalisé à 20%
+à la fin de la simulation le modèle permettrait l'btension d'une distribution végétale respectant un équilibre entre biodiversité et sécurité des infrastructures.
 
 ## États possibles pour une parcelle 
 1) Vide
@@ -40,3 +40,25 @@ Simuler l'evolution de la vegetalisation d'un terrain fraichement dégagé pour 
 
 La matrice de transition contient les probabilités qui décrivent la chance de l'évolution d'un système d'un état à un autre.
 La matrice de transition utilisé dans ce modèle possède les propriétés des chaînes de Markov. En effet, chaque changement ne depend que de l'état présent (processus sans mémoir).
+
+### Succession :
+- Vide --> Vide OU Herbe
+- Herbe --> Vide OU Herbe OU Buisson 1 OU Buisson 2
+- Buisson 1 ---> Vide OU Herbe OU Buisson 1 
+- Buisson 2 --> Vide OU Herbe OU Buisson 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
