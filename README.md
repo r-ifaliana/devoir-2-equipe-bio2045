@@ -3,26 +3,27 @@
 
 ## Table de matière 
 
-### Introduction
-Présentation générale de la situation
-Problématique 
-Hypothèse
-Résultats attendus
+### I. Introduction
+- Présentation générale de la situation
+- Problématique 
+- Hypothèse
+- Résultats attendus
 
-### Présentation du modèle 
-### Implémentation 
+### II. Présentation du modèle 
+### III. Implémentation 
 
-### Code 
-Les packages necessaire 
-Les fonctions utilisés
-Les simulations 
-Représentation graphique
+### IV. Code 
+- Les packages necessaire 
+- Les fonctions utilisés
+- Les simulations 
+- Représentation graphique
 
-### Principeaux ésultats 
-### Discussion
-### Conclusion 
-Résumés des résultats important
-Réponse à la problématique de l'introduction
+### V. Principeaux résultats 
+### VI. Discussion
+### VII. Conclusion 
+- Résumés des résultats important
+- Réponse à la problématique de l'introduction
+
 
 ## But du programme 
 
