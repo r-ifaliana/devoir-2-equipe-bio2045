@@ -2,8 +2,27 @@
 # Devoir 2 - Succession végétale
 
 ## Table de matière 
-### Introduction
 
+### Introduction
+#### Présentation générale de la situation
+#### Problématique 
+#### Hypothèse
+#### Résultats attendus
+
+### Présentation du modèle 
+### Implémentation 
+
+### Code 
+#### Les packages necessaire 
+#### Les fonctions utilisés
+#### Les simulations 
+#### Représentation graphique
+
+### Principeaux ésultats 
+### Discussion
+### Conclusion 
+#### Résumés des résultats important
+#### Réponse à la problématique de l'introduction
 
 ## But du programme 
 
