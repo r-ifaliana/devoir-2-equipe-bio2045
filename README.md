@@ -28,7 +28,10 @@
 ## But du programme 
 
 Simuler l'évolution de la végétalisation d'un terrain fraichement dégagé pour l'installation d'une ligne à haute tension. 
-À, la fin de la simulation le modèle permettrait l'obtension d'une distribution végétale respectant un équilibre entre biodiversité et sécurité des infrastructures.
+À la fin de la simulation, le modèle permettrait l'obtension d'une distribution végétale respectant un équilibre entre biodiversité et sécurité des infrastructures.
+
+## Résumé
+Pour atteindre l'objectif du programme, deux simulations ont étaient faites: une deterministe qui donne toujour le meme résultat et une aléatoire qui introduit plus de variabilité et donc est plus réaliste nous renseignant sur l'efficacité du programme. 
 
 ## États possibles pour une parcelle 
 1) Vide
