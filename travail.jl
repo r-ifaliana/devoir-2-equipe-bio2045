@@ -262,10 +262,10 @@ patches = sum(s)
 
 # Transitions
 T = zeros(Float64, states, states)
-T[1, :] = [0.98, 0.02, 0, 0]
+T[1, :] = [0.98, 0.02, 0.0, 0.0]
 T[2, :] = [0.2, 0.66, 0.065, 0.075]
-T[3, :] = [0.02, 0.035, 0.9, 0]
-T[4, :] = [0.02, 0.035, 0, 0.9]
+T[3, :] = [0.02, 0.035, 0.9, 0.0]
+T[4, :] = [0.02, 0.035, 0.0, 0.9]
 T
 
 states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
@@ -314,9 +314,9 @@ println(check_conditions(det_sim)) # a enlever
 # 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
 # 2) L'herbes représente 30% de la végétations, avec un interval de tolérence de 10%.
 # 3) La variété de buisson la moins commune sur le terrain représente au moins 30% des buissons.
-# À la fin de cette simulation le terrain obtenu se compose de ()% de végétation dont ()% sont de l'herbes. Et la variété de buisson la moins présente représente ()% des buissons.
+# À la fin de cette simulation le terrain obtenu se compose de 21.48% de végétation dont 29.15% sont de l'herbes. Et la variété de buisson la moins présente représente 46.43% des buissons.
 # La simulation stochastique est réalisé par création aléatoire de la population de la génération suivante.
-# La répétition (200 fois) de l'exution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de ()%.
+# La répétition (200 fois) de l'exéution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de 47.5%.
 # Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
 
 # Figure : cammambert des valeurs obtenu à la fin de la simulation deterministe 
