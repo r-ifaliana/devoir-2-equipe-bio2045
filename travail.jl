@@ -12,7 +12,7 @@
 #      github: DeuxiAut
 # ---
 
-# ## Introduction
+# # Introduction
 
 # Pour rendre la ville plus verte tout en assurant la sécurité des infrastructures,
 # il est important de savoir comment bien aménager les espaces publics.
@@ -32,7 +32,7 @@
 # plus grande qu'elles évoluent vers des buissons d'une des deuc variétés. Une proportion des parcelles végétalisées redeviendra vide.
 # L'objectif est d'obtenir une bonne estimation du nombre de buissons à planter pour aménager efficacement le terrain.
 
-# ## Présentation du modèle
+# # Présentation du modèle
 
 # Le modèle utilisé est un modèle de transition entre états, dans lequel chaque parcelle du terrain peut se trouver dans un état écologique précis.
 # À chaque génération, l'état d'une parcelle peut changer selon les probabilités définies dans une matrice de transition.
@@ -45,7 +45,7 @@
 # Il permet de simuler l'évolution des parcelles dans chaque état au cours des générations afin d'avoir une bonne estimation du nombre de buissons à planter
 # tout en respectant les contraintes imposées (50 buissons à planter sur 200 parcelles) afin d'optimiser l'aménagement du terrain.
 
-# ## Implémentation
+# # Implémentation
 
 # Le modèle est implémenté dans Julia à partir du code fourni pour simuler les transitions végétales.
 # Il utilise une matrice qui correspond à l'évolution de chaque état au cours du temps. 
@@ -65,7 +65,7 @@ using Distributions
 
 Random.seed!(2045)
 
-# ## Fonctions utilisé
+# ## Fonctions utilisées
 
 """
     check_transition_matrix!(T)
@@ -74,10 +74,9 @@ Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1. Si 
 
 'T' doit être une matrice de probabilités.
 """
-
 function check_transition_matrix!(T)
 
-    # axes(T,1) retourne les indices de la premiere dimension de T donc les lignes
+    ## axes(T,1) retourne les indices de la premiere dimension de T donc les lignes
 
     for ligne in axes(T, 1) 
         if sum(T[ligne, :]) != 1
@@ -90,7 +89,7 @@ end
 
 
 """
-check_function_arguments(transitions, states)
+    check_function_arguments(transitions, states)
 
 Cette fonction vérifie que la matrice de transition 'transitions' est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal au nombre d'états possible. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
@@ -98,7 +97,6 @@ Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal
 'transitions' doit être une matrice de probabilités.
 'states' doit être un vecteur de nombres.
 """
-
 function check_function_arguments(transitions, states)
     if size(transitions, 1) != size(transitions, 2)
         throw("La matrice de transition n'est pas carrée")
@@ -111,7 +109,7 @@ function check_function_arguments(transitions, states)
 end
 
 """
-_sim_stochastic!(timeseries, transitions, generation)
+    _sim_stochastic!(timeseries, transitions, generation)
 
 Cette fonction génère aléatoirement la population au temps t+1 à partir de la population présente au temps t.
 
@@ -119,19 +117,18 @@ Cette fonction génère aléatoirement la population au temps t+1 à partir de l
 'transitions' doit être une matrice de probabilités.
 'generation' doit être un nombre.
 """
-
 function _sim_stochastic!(timeseries, transitions, generation)
     for state in axes(timeseries, 1) # state = indices des lignes (états)
 
-        #Multinomial() cree échantillon aléatoire suivant une loi multinomiale
-        #Multinomial(n, p) = génère un tirage aléatoire de n objets répartis selon les probabilités p
+        ##Multinomial() cree échantillon aléatoire suivant une loi multinomiale
+        ##Multinomial(n, p) = génère un tirage aléatoire de n objets répartis selon les probabilités p
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
         timeseries[:, generation+1] .+= pop_change
     end
 end
 
 """
-_sim_determ!(timeseries, transitions, generation)
+    _sim_determ!(timeseries, transitions, generation)
 
 Cette fonction génère de façon déterministe la nouvelle génération au temps t+1 à partir de la population existante au temps t.
 
@@ -139,14 +136,13 @@ Cette fonction génère de façon déterministe la nouvelle génération au temp
 'transitions' doit être une matrice de probabilités.
 'generation' doit être un nombre.
 """
-
 function _sim_determ!(timeseries, transitions, generation)
     pop_change = (timeseries[:, generation]' * transitions)'
     timeseries[:, generation+1] .= pop_change
 end
 
 """
-simulation(transitions, states; generations=500, stochastic=false)
+    simulation(transitions, states; generations=500, stochastic=false)
 
 Cette fonction effectue la simulation.
 Elle vérifie que les arguments sont corrects
@@ -156,25 +152,24 @@ et adapte les estimations de l'evolution de la population selon le modèle chois
 'states'doit être un vecteur de nombres.
 'generations' est par défaut égal à 500 et 'stochastic' est par défaut false
 """
-
 function simulation(transitions, states; generations=500, stochastic=false)
 
     check_transition_matrix!(transitions)
     check_function_arguments(transitions, states)
     
-    #Si déterministe : poppulation continue (calcul de probabilités) 
-    #Sinon : populaiton entière (simulation stochastique)
+    ##Si déterministe : poppulation continue (calcul de probabilités) 
+    ##Sinon : populaiton entière (simulation stochastique)
 
     _data_type = stochastic ? Int64 : Float32
     timeseries = zeros(_data_type, length(states), generations + 1) #état initial
     timeseries[:, 1] = states 
     
-    # Choix de la fonction selon le type de simulation
+    ## Choix de la fonction selon le type de simulation
 
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
     
-    # Base.OneTo(X) crée une boucle qui va de 1 à X
-    # boucle qui remplit la matrice avec les nouveaux changements
+    ## Base.OneTo(X) crée une boucle qui va de 1 à X
+    ## boucle qui remplit la matrice avec les nouveaux changements
 
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
@@ -184,7 +179,7 @@ function simulation(transitions, states; generations=500, stochastic=false)
 end
 
 """
-check_conditions(timeseries)
+    check_conditions(timeseries)
 
 Vérifie 3 conditions à la dernière génération : 
 1) >= 20% des parcelles sont végétalisées.
@@ -194,10 +189,9 @@ Vérifie 3 conditions à la dernière génération :
 Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
-
 function check_conditions(timeseries; tolerance=0.05)
     
-    # On récupère la dernière colonne (état final)
+    ## On récupère la dernière colonne (état final)
     etat_final = timeseries[:, end]
 
     Barren = etat_final[1]
@@ -209,12 +203,12 @@ function check_conditions(timeseries; tolerance=0.05)
     Vegetation = Grass + Shrubs1 + Shrubs2
     shrubs_total = Shrubs1 + Shrubs2
 
-    # Condition 1 = au moins 20% de parcelles végétalisées
+    ## Condition 1 = au moins 20% de parcelles végétalisées
 
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
     println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
 
-    # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
+    ## Condition 2 = 30% des parcelles végétalisées doivent être des herbes
 
     if Vegetation > 0
         cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
@@ -223,7 +217,7 @@ function check_conditions(timeseries; tolerance=0.05)
     end
         println("% de herbes =", (Grass/Vegetation)*100, "%")
 
-    # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
+    ## Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
 
     if shrubs_total > 0
         cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
@@ -232,12 +226,12 @@ function check_conditions(timeseries; tolerance=0.05)
     end
         println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
-    println(cond1, cond2, cond3) # a enlever
+    println(cond1, cond2, cond3) ## a enlever
     return cond1, cond2, cond3
 end
 
 """
-check_80(transitions, states, timeseries)
+    check_80(transitions, states, timeseries)
 
 cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
 
@@ -273,7 +267,7 @@ T[4, :] = [0.02, 0.035, 0.0, 0.9]
 T
 
 states_names = ["Barren", "Grasses", "Shrubs1", "Shrubs2"]
-states_colors = [:grey40, :orange, :teal, :green] # on peut peut etre trouver d'autre couleur si tu veux
+states_colors = [:grey40, :orange, :teal, :green] ## on peut peut etre trouver d'autre couleur si tu veux
 
 # Simulations
 
@@ -312,9 +306,10 @@ current_figure()
 println(check_conditions(det_sim)) # a enlever
 
 
-# ## Présentation des résultats
+# # Présentation des résultats
 
 # Deux simulations ont étaient réalisé, une première deterministe et une seconde stochastique.
+
 # La simulation deterministe à permis de trouver les valeurs de la matrice de transition,
 # qui ont permis l'obtention d'une distribution finale respectant les trois condition suivantes :
 # 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
@@ -331,7 +326,7 @@ println(check_conditions(det_sim)) # a enlever
 etat_F= det_sim[:,end]
 pie(etat_F,color= states_colors)
 
-# ## Discussion
+# # Discussion
 
 # Les simulations réalisées permettent de simuler comment un corridor végétalisé peut évoluer à partir d'un nombre limité de buissons plantés.
 # Le modèle utilisé reprend le principe d'une succession végétale où les parcelles de sol nu peuvent être colonisés par des herbes, qui peuvent ensuite évoluer vers des états dominés par des buissons.
@@ -352,7 +347,7 @@ pie(etat_F,color= states_colors)
 # Ce qui crée une limite car dans des écosystème réels, la succession végétale est fortement influencée par des facteurs en plus, tels que les interactions spatiales, la dispersion des graines
 # ou la dispersion des graines ou les conditions environnementales locales @wetherington2022succession, @taylor2009forestsuccession. Ces processus peuvent modifier la dynamique de colonisation et de remplacement des espèces et ne sont pas pris en compte dans ce modèle simplifié.
 
-# ## Conclusion 
+# # Conclusion 
 
 # Pour conclure, malgré les simplications, la simulation permet d'explorer différent scénarios d'aménagement et d'illustrer comment les probabilités de transition et les conditions initiales
 # ont un effet sur l'évolution d'un système écologique. 
