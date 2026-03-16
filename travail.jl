@@ -65,20 +65,6 @@ using Distributions
 
 Random.seed!(2045)
 
-
-# ## Une autre section # a enlever
-##################################
-"""
-    foo(x, y)
-
-Cette fonction ne fait rien.
-"""
-function foo(x, y)
-    ## Cette ligne est un commentaire
-    return nothing
-end
-###########################
-
 # ## Fonctions utilisé
 
 """
@@ -88,8 +74,11 @@ Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1. Si 
 
 'T' doit être une matrice de probabilités.
 """
+
 function check_transition_matrix!(T)
+
     # axes(T,1) retourne les indices de la premiere dimension de T donc les lignes
+
     for ligne in axes(T, 1) 
         if sum(T[ligne, :]) != 1
             @warn "La somme de la ligne $(ligne) n'est pas égale à 1 et a été modifiée"
@@ -109,6 +98,7 @@ Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal
 'transitions' doit être une matrice de probabilités.
 'states' doit être un vecteur de nombres.
 """
+
 function check_function_arguments(transitions, states)
     if size(transitions, 1) != size(transitions, 2)
         throw("La matrice de transition n'est pas carrée")
@@ -129,8 +119,10 @@ Cette fonction génère aléatoirement la population au temps t+1 à partir de l
 'transitions' doit être une matrice de probabilités.
 'generation' doit être un nombre.
 """
+
 function _sim_stochastic!(timeseries, transitions, generation)
     for state in axes(timeseries, 1) # state = indices des lignes (états)
+
         #Multinomial() cree échantillon aléatoire suivant une loi multinomiale
         #Multinomial(n, p) = génère un tirage aléatoire de n objets répartis selon les probabilités p
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
@@ -147,6 +139,7 @@ Cette fonction génère de façon déterministe la nouvelle génération au temp
 'transitions' doit être une matrice de probabilités.
 'generation' doit être un nombre.
 """
+
 function _sim_determ!(timeseries, transitions, generation)
     pop_change = (timeseries[:, generation]' * transitions)'
     timeseries[:, generation+1] .= pop_change
@@ -163,6 +156,7 @@ et adapte les estimations de l'evolution de la population selon le modèle chois
 'states'doit être un vecteur de nombres.
 'generations' est par défaut égal à 500 et 'stochastic' est par défaut false
 """
+
 function simulation(transitions, states; generations=500, stochastic=false)
 
     check_transition_matrix!(transitions)
@@ -170,15 +164,18 @@ function simulation(transitions, states; generations=500, stochastic=false)
     
     #Si déterministe : poppulation continue (calcul de probabilités) 
     #Sinon : populaiton entière (simulation stochastique)
+
     _data_type = stochastic ? Int64 : Float32
     timeseries = zeros(_data_type, length(states), generations + 1) #état initial
     timeseries[:, 1] = states 
     
     # Choix de la fonction selon le type de simulation
+
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
     
     # Base.OneTo(X) crée une boucle qui va de 1 à X
     # boucle qui remplit la matrice avec les nouveaux changements
+
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
     end
@@ -197,6 +194,7 @@ Vérifie 3 conditions à la dernière génération :
 Retourne "true" selon la condition respectée.
 'timeseries' doit être une matrice d'états.
 """
+
 function check_conditions(timeseries; tolerance=0.05)
     
     # On récupère la dernière colonne (état final)
@@ -212,9 +210,12 @@ function check_conditions(timeseries; tolerance=0.05)
     shrubs_total = Shrubs1 + Shrubs2
 
     # Condition 1 = au moins 20% de parcelles végétalisées
+
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
     println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
+
     # Condition 2 = 30% des parcelles végétalisées doivent être des herbes
+
     if Vegetation > 0
         cond2 = (0.30-tolerance)<=(Grass/Vegetation)<=(0.30+tolerance)
     else
@@ -223,6 +224,7 @@ function check_conditions(timeseries; tolerance=0.05)
         println("% de herbes =", (Grass/Vegetation)*100, "%")
 
     # Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
+
     if shrubs_total > 0
         cond3 = (min(Shrubs1, Shrubs2)/shrubs_total) >= 0.30
     else
@@ -256,11 +258,13 @@ end
 
 # States
 # Barren, Grass, Shrubs1, Shrubs2
+
 s = [150, 0, 25, 25]
 states = length(s)
 patches = sum(s)
 
 # Transitions
+
 T = zeros(Float64, states, states)
 T[1, :] = [0.98, 0.02, 0.0, 0.0]
 T[2, :] = [0.2, 0.66, 0.065, 0.075]
@@ -278,12 +282,14 @@ ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 
 # Deterministic simulation
+
 det_sim = simulation(T, s; stochastic=false, generations=200)
 for i in eachindex(s)
     lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=4)
 end
 
 # Stochastic simulation
+
 condition_respecté =0
 repet_simulation = 200
 for _ in 1:repet_simulation
@@ -321,6 +327,7 @@ println(check_conditions(det_sim)) # a enlever
 
 # Figure : camembert des valeurs obtenu à la fin de la simulation deterministe 
 # pie(valeurs= vecteur, color=vecteur)
+
 etat_F= det_sim[:,end]
 pie(etat_F,color= states_colors)
 
