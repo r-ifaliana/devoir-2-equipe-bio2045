@@ -326,6 +326,32 @@ pie(etat_F,color= states_colors)
 
 # ## Discussion
 
+# Les simulations réalisées permettent de simuler comment un corridor végétalisé peut évoluer à partir d'un nombre limité de buissons plantés.
+# Le modèle utilisé reprend le principe d'une succession végétale où les parcelles de sol nu peuvent être colonisés par des herbes, qui peuvent ensuite évoluer vers des états dominés par des buissons.
+# Cette succession écologique est retrouvée dans de nombreux écosystèmes où les espèces pionnières colonisent d'abord les milieux perturbés avant d'être progressivement remplacés par des espèces plus compétitives @références.
+
+# La simulation déterministe montre que la matrice de transition choisie permet d'atteindre un état d'équilibre respectant les conditions imposées. Cependant, lorsque le modèle stochastique est pris en compte, ce caractère aléatoire malgré la répétition de 200fois 
+# ne permet d'atteindre une réussite dans 47.5% des simulations. Ce résultat est nettement inférieur à l'objectif initial, qui était d'obtenir au moins 80% de réussite. 
+# Cet écart prouve que la simulation proposée permet théoriquement d'atteindre l'état final souhaité, mais que la variabilité aléatoire du système réduit fortement la probabilité 
+# que cet équilibre soit atteint dans la pratique.
+
+# Plusieurs éléments du modèle peuvent expliquer cette différence. Par exemple, les probabilités de transition favorisent fortement la persistance des buissons,
+# avec une probabilité de 0.9 de rester dans le même état. Une fois établis, les buissons on tendance à rester dans le système. 
+# Dans le modèle stochastique, les petits variations montrent un gros impact quant à la composition finale de la végétation. 
+
+# Le fait de ne pa atteindre les 80% de réussite suggère que la situation initiale et/ou les probabilités de transition pourraient encore être ajsutées pour augmenter la stabilité du système. 
+# Par exemple, augmenter légèrement la probabilité de transition des herbes vers les buissons ou modifier la proportion initiale des deux espèces de buissons pourraient améliorer la probabilité d'obtenir l'équilibre souhaité.
+# Le modèle repose sur une chaîne de Markov simple dans laquelle l'état futur d'une parcelle dépend uniquement de son état actuel et non de l'état des parcelles voisines.
+# Ce qui crée une limite car dans des écosystème réels, la succession végétale est fortement influencée par des facteurs en plus, tels que les interactions spatiales, la dispersion des graines
+# ou la dispersion des graines ou les conditions environnementales locales @references. Ces processus peuvent modifier la dynamique de colonisation et de remplacement des espèces et ne sont pas pris en compte dans ce modèle simplifié.
+
+# ## Conclusion 
+
+# Pour conclure, malgré les simplications, la simulation permet d'explorer différent scénarios d'aménagement et d'illustrer comment les probabilités de transition et les conditions initiales
+# ont un effet sur l'évolution d'un système écologique. 
+# Les résultats montrent que le modèle proposé peut atteindre l'équilirbe souhaité dans certaines situations, mais que la variabilité 
+# naturelle du système rend cet équilibre incertain lorsque l'on tient compte du caractère stochastique des dynamiques écologiques. 
+# Cela illustre l'importance de considérer la variabilité aléatoire dans les dynamiques écologiques lors de la planification d'aménagements. 
 ## qui suit a enlever
 # On peut aussi citer des références dans le document `references.bib`,
 # @ermentrout1993cellular -- la bibliographie sera ajoutée automatiquement à la
