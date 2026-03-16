@@ -319,7 +319,7 @@ println(check_conditions(det_sim)) # a enlever
 # La répétition (200 fois) de l'exéution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de 47.5%.
 # Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
 
-# Figure : cammambert des valeurs obtenu à la fin de la simulation deterministe 
+# Figure : camembert des valeurs obtenu à la fin de la simulation deterministe 
 # pie(valeurs= vecteur, color=vecteur)
 etat_F= det_sim[:,end]
 pie(etat_F,color= states_colors)
