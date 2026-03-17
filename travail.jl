@@ -19,18 +19,18 @@
 # La construction d'une ligne haute tension a permis le dégagement d'un terrain de 200 parcelles.
 # Un corridor conciliant biodiversité et sécurité sera aménagé, afin d'optimiser l'utilisation de cet espace libre.
 # Pour cela, un maximum de 50 buissons de deux variétés différentes pourront être plantés sur ce terrain.
-# Ensuite, les parcelles seront laissés sans intervention pour permettre le développement naturel de la biodivéersité.
+# Ensuite, les parcelles seront laissées sans intervention pour permettre le développement naturel de la biodivéersité.
 
 # Sachant que l'état de chaque parcelle change d'une génération à l'autre, les questions posées sont : 
 # combien de buissons faut-il planter pour obtenir un equilibre où 20% du terrain est végétalisé (dont 70% des buissons) après plusieurs générations ?
 # Et combien de buissons faut-il choisir de chaque variétés pour que la variété la moins commune représente au moins 30% des buissons ?
 
 # L'hypothèse est que le modèle proposé permet de simuler l'évolution de l'état des parcelles au fil des générations et ainsi d'estimer combien de 
-# buissons, au total et de chauque variété, il faudrait planter au début pour abboutir à l'équilibre souhaité dans 80% des simulations.
+# buissons, au total et de chaque variété, il faudrait planter au début pour abboutir à l'équilibre souhaité dans 80% des simulations.
 
-# Résultat attendus : une certaines proportion des parcelles vides deviendront des parcelles couvertes herbes, avec ensuite une probabilité 
-# plus grande qu'elles évoluent vers des buissons d'une des deuc variétés. Une proportion des parcelles végétalisées redeviendra vide.
-# L'objectif est d'obtenir une bonne estimation du nombre de buissons à planter pour aménager efficacement le terrain.
+# Résultat attendu : une certaine proportion des parcelles vides deviendront des parcelles couvertes herbes, avec ensuite une probabilité 
+# plus grande qu'elles évoluent vers des buissons d'une des deux variétés. Une proportion des parcelles végétalisées redeviendra vide.
+# L'objectif est d'obtenir une bonne estimation du nombre de buissons à planter ainsi que des probabilités de transition pour aménager efficacement le terrain.
 
 # # Présentation du modèle
 
@@ -41,7 +41,7 @@
 # L'évolution des parcelles est décrite par une matrice de transition où chaque ligne représente l'état d'une parcelle au temps t et chaque colonne
 # la probabilité de transition vers un nouvel état à la génération suivante. La somme des probabilités de chaque ligne doit être égale à 1.
 
-# Ce modèle correspond à une chaîne de Markov où l'état au temps t+1 dépend uniquement de l'état actuel et de la probabailité de transition qui va avec.
+# Ce modèle correspond à une chaîne de Markov où l'état au temps t+1 dépend uniquement de l'état actuel et de la probabilité de transition qui va avec.
 # Il permet de simuler l'évolution des parcelles dans chaque état au cours des générations afin d'avoir une bonne estimation du nombre de buissons à planter
 # tout en respectant les contraintes imposées (50 buissons à planter sur 200 parcelles) afin d'optimiser l'aménagement du terrain.
 
@@ -61,7 +61,7 @@ Random.seed!(123456)
 using CairoMakie
 using Distributions
 
-# ## point de départ standard
+# ## Point de départ standard
 
 Random.seed!(2045)
 
@@ -70,8 +70,7 @@ Random.seed!(2045)
 """
     check_transition_matrix!(T)
 
-Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1.
-Si ce n'est pas le cas, elle renvoie un warning pour signaler qu'elle va modifier l'objet 'T' afin que la somme de chache ligne devienne égale à 1.
+Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1. Si ce n'est pas le cas, elle renvoie un warning pour signaler qu'elle va modifier l'objet 'T' afin que la somme de chache ligne devienne égale à 1
 
 'T' doit être une matrice de probabilités.
 """
@@ -92,10 +91,10 @@ end
 """
     check_function_arguments(transitions, states)
 
-Cette fonction vérifie que la matrice de transition est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
+Cette fonction vérifie que la matrice de transition 'transitions' est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal au nombre d'états possible. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 
-'transitions' est la matrice de transision, elle doit être une matrice de probabilités.
+'transitions' doit être une matrice de probabilités.
 'states' doit être un vecteur de nombres.
 """
 function check_function_arguments(transitions, states)
@@ -106,7 +105,6 @@ function check_function_arguments(transitions, states)
     if size(transitions, 1) != length(states)
         throw("Le nombre d'états ne correspond pas à la matrice de transition")
     end
-
     return nothing
 end
 
@@ -118,7 +116,7 @@ Cette fonction génère aléatoirement la population au temps t+1 à partir de l
 
 'timeseries' doit être une matrice d'états.
 'transitions' doit être une matrice de probabilités.
-'generation' doit être un nombre entier.
+'generation' doit être un nombre.
 """
 function _sim_stochastic!(timeseries, transitions, generation)
     for state in axes(timeseries, 1) # state = indices des lignes (états)
@@ -130,7 +128,6 @@ function _sim_stochastic!(timeseries, transitions, generation)
         timeseries[:, generation+1] .+= pop_change
     end
 end
-
 
 """
     _sim_determ!(timeseries, transitions, generation)
@@ -146,7 +143,6 @@ function _sim_determ!(timeseries, transitions, generation)
     timeseries[:, generation+1] .= pop_change
 end
 
-
 """
     simulation(transitions, states; generations=500, stochastic=false)
 
@@ -156,8 +152,8 @@ et adapte les estimations de l'evolution de la population selon le modèle chois
 
 'transitions' doit être une matrice de probabilités.
 'states'doit être un vecteur de nombres.
-'generations' est par défaut égal à 500 et 'stochastic' est par défaut false, pour les modifier il faut leurs attribuer la valeur souhaité comme suit : argument = nouvelle_valeur.
-exemple : stochastic = true ou generation = 400.
+'generations' est par défaut égal à 500 et 'stochastic' est par défaut false, pour les modifier il faut leurs attribuer la valeur souhaité comme suit : argument = nouvelle_valeur
+exemple : stochastic = true ou generation = 400
 """
 function simulation(transitions, states; generations=500, stochastic=false)
 
@@ -187,7 +183,7 @@ end
 
 
 """
-    check_conditions(timeseries; tolerance=0.05)
+    check_conditions(timeseries)
 
 Vérifie 3 conditions à la dernière génération : 
 1) >= 20% des parcelles sont végétalisées.
@@ -197,12 +193,11 @@ Retourne "true" selon si la condition respectée.
 Donc renvoie 3 valeurs booléennes.
 
 'timeseries' doit être une matrice d'états.
-'tolerance' est fixé à 0.05 par défaut.
+'tolerance' est fixé à 0.05 par défaut
 """
 function check_conditions(timeseries; tolerance=0.05)
     
     ## On récupère la dernière colonne (état final)
-
     etat_final = timeseries[:, end]
 
     Barren = etat_final[1]
@@ -217,6 +212,7 @@ function check_conditions(timeseries; tolerance=0.05)
     ## Condition 1 = au moins 20% de parcelles végétalisées
 
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
+    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
 
     ## Condition 2 = 30% des parcelles végétalisées doivent être des herbes
 
@@ -225,6 +221,7 @@ function check_conditions(timeseries; tolerance=0.05)
     else
        cond2 = false
     end
+        println("% de herbes =", (Grass/Vegetation)*100, "%")
 
     ## Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
 
@@ -233,16 +230,11 @@ function check_conditions(timeseries; tolerance=0.05)
     else
         cond3 = false
     end
-    
-    ## Affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision 
+        println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
 
-    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
-    println("% de herbes =", (Grass/Vegetation)*100, "%")
-    println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
-
+    println(cond1, cond2, cond3) ## a enlever
     return cond1, cond2, cond3
 end
-
 
 """
     check_80(condition_respecté, repet_simulation)
@@ -250,14 +242,10 @@ end
 cette fonction vérifie qu'au moins 80% des simulations vérifient les conditions d'équilibre du modèle.
 
 'condition_respecté' doit être un nombre entier (représentant le nombre de fois où toutes les conditions sont respectées)
-'repet_simulation' doit être un nombre entier (représentant combien de fois la simulation sera répété )
+'repet_simulation' doit être un nombre entier (représentant combien de fois la simulation sera répétée )
 """
 function check_80(condition_respecté, repet_simulation)
-
-    ## Pourcentage de simulation respectant les 3 conditions 
-
     condition_respecté = (condition_respecté/repet_simulation)*100
-
     if condition_respecté >= 80
         return true, println("Conditions d'équilibre respécté dans", condition_respecté ,"% des simulations")
     else
@@ -303,7 +291,7 @@ end
 
 # Stochastic simulation
 
-condition_respecté = 0
+condition_respecté =0
 repet_simulation = 200
 for _ in 1:repet_simulation
     sto_sim = simulation(T, s; stochastic=true, generations=200)
@@ -326,17 +314,17 @@ current_figure()
 
 # # Présentation des résultats
 
-# Deux simulations ont étaient réalisé, une première deterministe et une seconde stochastique.
+# Deux simulations ont été réalisées, une première déterministe et une seconde stochastique.
 
-# La simulation deterministe à permis de trouver les valeurs de la matrice de transition,
-# qui ont permis l'obtention d'une distribution finale respectant les trois condition suivantes :
-# 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec un interval de tolérence de 10%.
-# 2) L'herbes représente 30% de la végétations, avec un interval de tolérence de 10%.
+# La simulation déterministe a permis de trouver les valeurs de la matrice de transition,
+# qui ont permis l'obtention d'une distribution finale respectant les trois conditions suivantes :
+# 1) La végétation (herbes + buisson1 + buisson2) représente 20% du terrain, avec une intervalel de tolérance de 10%.
+# 2) L'herbe représente 30% de la végétation, avec une intervalle de tolérance de 10%.
 # 3) La variété de buisson la moins commune sur le terrain représente au moins 30% des buissons.
-# À la fin de cette simulation le terrain obtenu se compose de 21.48% de végétation dont 29.15% sont de l'herbes. Et la variété de buisson la moins présente représente 46.43% des buissons.
+# À la fin de cette simulation le terrain obtenu se compose de 21.48% de végétation dont 29.15% sont de l'herbe. Et la variété de buisson la moins présente représente 46.43% des buissons.
 # La simulation stochastique est réalisé par création aléatoire de la population de la génération suivante.
-# La répétition (200 fois) de l'exéution de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de 47.5%.
-# Ce pourcentage mesure combien de fois la simulation a respectée les 3 conditions.
+# La répétition (200 fois) de la simulation stochastique a permis l'obtention du pourcentage de bon fonctionnement qui est de 47.5%.
+# Ce pourcentage mesure combien de fois la simulation a respecté les 3 conditions.
 
 # Figure : Camembert des valeurs obtenu à la fin de la simulation deterministe 
 # pie(valeurs= vecteur, color=vecteur)
