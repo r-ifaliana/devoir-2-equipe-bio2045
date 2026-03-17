@@ -233,11 +233,12 @@ function check_conditions(timeseries; tolerance=0.05)
         cond3 = false
     end
         
-    ## Affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision 
+    ## Code pour l'affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision.
+    ## Affichage non exécuté pour alléger l'exécution, symbole '#' à enlever pour afficher les données. 
 
-    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
-    println("% de herbes =", (Grass/Vegetation)*100, "%")
-    println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
+    # println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
+    # println("% de herbes =", (Grass/Vegetation)*100, "%")
+    # println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
     
     return cond1, cond2, cond3
 end
