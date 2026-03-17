@@ -70,7 +70,8 @@ Random.seed!(2045)
 """
     check_transition_matrix!(T)
 
-Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1. Si ce n'est pas le cas, elle renvoie un warning pour signaler qu'elle va modifier l'objet 'T' afin que la somme de chache ligne devienne égale à 1
+Cette fonction vérifie que la somme de chaque ligne de 'T' est égale à 1.
+Si ce n'est pas le cas, elle renvoie un warning pour signaler qu'elle va modifier l'objet 'T' afin que la somme de chache ligne devienne égale à 1.
 
 'T' doit être une matrice de probabilités.
 """
@@ -91,10 +92,10 @@ end
 """
     check_function_arguments(transitions, states)
 
-Cette fonction vérifie que la matrice de transition 'transitions' est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
+Cette fonction vérifie que la matrice de transition est carrée donc que le nombre de ses lignes est égal au nombre de ses colonnes. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 Elle vérifie aussi que le nombre de ligne de la matrice de transition est égal au nombre d'états possible. Si ce n'est pas le cas, elle arrête le programme et affiche un message d'erreur.
 
-'transitions' doit être une matrice de probabilités.
+'transitions' est la matrice de transision, elle doit être une matrice de probabilités.
 'states' doit être un vecteur de nombres.
 """
 function check_function_arguments(transitions, states)
@@ -105,6 +106,7 @@ function check_function_arguments(transitions, states)
     if size(transitions, 1) != length(states)
         throw("Le nombre d'états ne correspond pas à la matrice de transition")
     end
+
     return nothing
 end
 
@@ -116,7 +118,7 @@ Cette fonction génère aléatoirement la population au temps t+1 à partir de l
 
 'timeseries' doit être une matrice d'états.
 'transitions' doit être une matrice de probabilités.
-'generation' doit être un nombre.
+'generation' doit être un nombre entier.
 """
 function _sim_stochastic!(timeseries, transitions, generation)
     for state in axes(timeseries, 1) # state = indices des lignes (états)
@@ -128,6 +130,7 @@ function _sim_stochastic!(timeseries, transitions, generation)
         timeseries[:, generation+1] .+= pop_change
     end
 end
+
 
 """
     _sim_determ!(timeseries, transitions, generation)
@@ -143,6 +146,7 @@ function _sim_determ!(timeseries, transitions, generation)
     timeseries[:, generation+1] .= pop_change
 end
 
+
 """
     simulation(transitions, states; generations=500, stochastic=false)
 
@@ -152,8 +156,8 @@ et adapte les estimations de l'evolution de la population selon le modèle chois
 
 'transitions' doit être une matrice de probabilités.
 'states'doit être un vecteur de nombres.
-'generations' est par défaut égal à 500 et 'stochastic' est par défaut false, pour les modifier il faut leurs attribuer la valeur souhaité comme suit : argument = nouvelle_valeur
-exemple : stochastic = true ou generation = 400
+'generations' est par défaut égal à 500 et 'stochastic' est par défaut false, pour les modifier il faut leurs attribuer la valeur souhaité comme suit : argument = nouvelle_valeur.
+exemple : stochastic = true ou generation = 400.
 """
 function simulation(transitions, states; generations=500, stochastic=false)
 
@@ -183,7 +187,7 @@ end
 
 
 """
-    check_conditions(timeseries)
+    check_conditions(timeseries; tolerance=0.05)
 
 Vérifie 3 conditions à la dernière génération : 
 1) >= 20% des parcelles sont végétalisées.
@@ -193,11 +197,12 @@ Retourne "true" selon si la condition respectée.
 Donc renvoie 3 valeurs booléennes.
 
 'timeseries' doit être une matrice d'états.
-'tolerance' est fixé à 0.05 par défaut
+'tolerance' est fixé à 0.05 par défaut.
 """
 function check_conditions(timeseries; tolerance=0.05)
     
     ## On récupère la dernière colonne (état final)
+
     etat_final = timeseries[:, end]
 
     Barren = etat_final[1]
@@ -212,7 +217,6 @@ function check_conditions(timeseries; tolerance=0.05)
     ## Condition 1 = au moins 20% de parcelles végétalisées
 
     cond1 = (0.2-tolerance)<=(Vegetation / total_parcelles)<= (0.2+tolerance)
-    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
 
     ## Condition 2 = 30% des parcelles végétalisées doivent être des herbes
 
@@ -221,7 +225,6 @@ function check_conditions(timeseries; tolerance=0.05)
     else
        cond2 = false
     end
-        println("% de herbes =", (Grass/Vegetation)*100, "%")
 
     ## Condition 3 = la variété de buisson la moins abondante doit faire au moins 30% du total des buissons
 
@@ -230,11 +233,16 @@ function check_conditions(timeseries; tolerance=0.05)
     else
         cond3 = false
     end
-        println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
+    
+    ## Affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision 
 
-    println(cond1, cond2, cond3) ## a enlever
+    println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
+    println("% de herbes =", (Grass/Vegetation)*100, "%")
+    println("% de buisson minimum =", (min(Shrubs1, Shrubs2)/shrubs_total)*100, "%")
+
     return cond1, cond2, cond3
 end
+
 
 """
     check_80(condition_respecté, repet_simulation)
@@ -245,7 +253,11 @@ cette fonction vérifie qu'au moins 80% des simulations vérifient les condition
 'repet_simulation' doit être un nombre entier (représentant combien de fois la simulation sera répété )
 """
 function check_80(condition_respecté, repet_simulation)
+
+    ## Pourcentage de simulation respectant les 3 conditions 
+
     condition_respecté = (condition_respecté/repet_simulation)*100
+
     if condition_respecté >= 80
         return true, println("Conditions d'équilibre respécté dans", condition_respecté ,"% des simulations")
     else
@@ -291,7 +303,7 @@ end
 
 # Stochastic simulation
 
-condition_respecté =0
+condition_respecté = 0
 repet_simulation = 200
 for _ in 1:repet_simulation
     sto_sim = simulation(T, s; stochastic=true, generations=200)
