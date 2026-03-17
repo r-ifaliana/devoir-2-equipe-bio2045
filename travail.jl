@@ -19,7 +19,7 @@
 # La construction d'une ligne haute tension a permis le dégagement d'un terrain de 200 parcelles.
 # Un corridor conciliant biodiversité et sécurité sera aménagé, afin d'optimiser l'utilisation de cet espace libre.
 # Pour cela, un maximum de 50 buissons de deux variétés différentes pourront être plantés sur ce terrain.
-# Ensuite, les parcelles seront laissées sans intervention pour permettre le développement naturel de la biodivéersité.
+# Ensuite, les parcelles seront laissées sans intervention pour permettre le développement naturel de la biodiversité.
 
 # Sachant que l'état de chaque parcelle change d'une génération à l'autre, les questions posées sont : 
 # combien de buissons faut-il planter pour obtenir un equilibre où 20% du terrain est végétalisé (dont 70% des buissons) après plusieurs générations ?
