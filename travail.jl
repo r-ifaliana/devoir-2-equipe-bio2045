@@ -57,7 +57,6 @@
 # ## Packages nécessaires
 
 import Random
-Random.seed!(123456)
 using CairoMakie
 using Distributions
 
