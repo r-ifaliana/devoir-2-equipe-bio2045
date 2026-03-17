@@ -233,8 +233,8 @@ function check_conditions(timeseries; tolerance=0.05)
         cond3 = false
     end
         
-    ## Code pour l'affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision.
-    ## Affichage non exécuté pour alléger l'exécution, symbole '#' à enlever pour afficher les données. 
+    # Code pour l'affichage des pourcentages pour chaque condition pour l'ajustement de la matrice de transision.
+    # Affichage non exécuté pour alléger l'exécution, symbole '#' à enlever pour afficher les données. 
 
     # println("% de végétation =", (Vegetation/total_parcelles)*100, "%")
     # println("% de herbes =", (Grass/Vegetation)*100, "%")
