@@ -308,7 +308,7 @@ for _ in 1:repet_simulation
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     cond1, cond2, cond3 = check_conditions(sto_sim)
     if cond1 & cond2 & cond3
-        nb_condition_respecté = nb_condition_respecté +1
+        global nb_condition_respecté = nb_condition_respecté +1
     end
     for i in eachindex(s)
         lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.1)
